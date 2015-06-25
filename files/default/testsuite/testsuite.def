@@ -1,0 +1,10 @@
+# 4.0.3
+suite testsuite
+  edit ECF_HOME '/home/metop/ecflow'
+  edit ECF_BASE '/home/metop'
+  edit ECF_MICRO '$'
+  edit ECF_JOB_CMD 'python $ECF_JOB$ > $ECF_JOBOUT$ 2>&1'
+  family native_python
+    task hello_task
+  endfamily
+endsuite
