@@ -1,10 +1,10 @@
 # ecflow-cookbook
 
-TODO: Enter the cookbook description here.
+TODO: Sets up an ECMWF ecflow server and client
 
 ## Supported Platforms
 
-TODO: List your supported platforms.
+Only ubuntu-14.04 so far. 
 
 ## Attributes
 
