@@ -15,7 +15,7 @@ default['ecflow']['daemon']['home'] = '/home/ecflow'
 
 # Suite definitions and families must be placed here. 
 default['ecflow']['ecf_base'] = '/home/metop'
-default['ecflow']['ecf_home'] = '/home/metop/ecflow'
+default['ecflow']['ecf_home'] = "#{node['ecflow']['ecf_base']}/ecflow"
 
 # user with write access to the ecflow-tasks.
 default['ecflow']['ecf_base_user'] = 'metop'

@@ -11,6 +11,8 @@ include_recipe "hostname::default"
 
 
 ENV['LANGUAGE'] = ENV['LANG'] = ENV['LC_ALL'] = "en_US.UTF-8"
+ENV['ECF_HOME'] = node['ecflow']['ecf_home']
+ENV['ECF_BASE'] = node['ecflow']['ecf_base']
 
 # Install the server
 arch = node['ecflow']['arch']
@@ -101,11 +103,21 @@ package "ecflow-python" do
     action :install
 end
 
+execute "create home dir for ecf_base_user if ldap user" do
+    command "mkdir -p #{node['ecflow']['ecf_base']}"
+    only_if "getent passwd #{node['ecflow']['ecf_base_user']}"
+end
+execute "create home dir for ecf daemon user if ldap user" do
+    command "mkdir -p #{node['ecflow']['daemon']['home']}"
+    only_if "getent passwd #{node['ecflow']['daemon']['user']}"
+end
+
 user node['ecflow']['daemon']['user'] do
     supports :manage_home => true
     comment 'ECFLOW daemon user'
     home node['ecflow']['daemon']['home']
     shell '/bin/bash'
+    not_if "getent passwd #{node['ecflow']['daemon']['user']}" #LDAP user
 end
 
 user node['ecflow']['ecf_base_user'] do
@@ -114,14 +126,13 @@ user node['ecflow']['ecf_base_user'] do
     home node['ecflow']['ecf_base']
     gid node['ecflow']['daemon']['user']
     shell '/bin/bash'
+    not_if "getent passwd #{node['ecflow']['ecf_base_user']}" #LDAP user
 end
-
 
 directory node['ecflow']['ecf_base'] do
     owner node['ecflow']['ecf_base_user']
     group node['ecflow']['daemon']['user']
     mode 0755
-    action :create
 end
 
 directory "#{node['ecflow']['ecf_base']}/#{node['ecflow']['daemon']['user']}" do
