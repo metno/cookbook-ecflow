@@ -111,6 +111,11 @@ execute "create home dir for ecf daemon user if ldap user" do
     command "mkdir -p #{node['ecflow']['daemon']['home']}"
     only_if "getent passwd #{node['ecflow']['daemon']['user']}"
 end
+directory node['ecflow']['daemon']['home'] do
+    owner node['ecflow']['daemon']['user']
+    group node['ecflow']['daemon']['user']
+    mode 0755
+end
 
 user node['ecflow']['daemon']['user'] do
     supports :manage_home => true
