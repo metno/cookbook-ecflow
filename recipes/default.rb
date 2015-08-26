@@ -25,7 +25,7 @@ remote_file dest_server do
     source server_url
     mode 0644
     checksum server_sha256
-    not_if { ::File.exists?(dest_server)}
+    not_if "dpkg -l ecflow-server | grep #{node['ecflow']['server']['version']}"
 end
 
 package "ecflow-server" do
@@ -55,7 +55,7 @@ remote_file dest_client do
     source client_url
     mode 0644
     checksum client_sha256
-    not_if { ::File.exists?(dest_client)}
+    not_if "dpkg -l ecflow | grep #{node['ecflow']['server']['version']}"
 end
 
 package "ecflow-client" do
@@ -76,7 +76,7 @@ remote_file dest_view do
     source view_url
     mode 0644
     checksum view_sha256
-    not_if { ::File.exists?(dest_view)}
+    not_if "dpkg -l ecflowview | grep #{node['ecflow']['server']['version']}"
 end
 
 package "ecflow-view" do
@@ -95,7 +95,7 @@ remote_file dest_python do
     source python_url
     mode 0644
     checksum python_sha256
-    not_if { ::File.exists?(dest_python)}
+    not_if "dpkg -l ecflow-python | grep #{node['ecflow']['server']['version']}"
 end
 
 package "ecflow-python" do
