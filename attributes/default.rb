@@ -10,6 +10,8 @@ default['ecflow']['daemon']['port'] = 3141
 # ecflow is launched as this user
 default['ecflow']['daemon']['user'] = 'ecflow'
 
+default['ecflow']['log_server']['port'] = 9316
+
 # Logfiles and check point files will be written here. 
 default['ecflow']['daemon']['home'] = '/home/ecflow'
 

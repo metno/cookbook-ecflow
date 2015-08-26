@@ -13,6 +13,7 @@ include_recipe "hostname::default"
 ENV['LANGUAGE'] = ENV['LANG'] = ENV['LC_ALL'] = "en_US.UTF-8"
 ENV['ECF_HOME'] = node['ecflow']['ecf_home']
 ENV['ECF_BASE'] = node['ecflow']['ecf_base']
+ENV['LOGPORT'] = node['ecflow']['log_server']['port'].to_s
 
 # Install the server
 arch = node['ecflow']['arch']
@@ -113,12 +114,6 @@ execute "create home dir for ecf daemon user if ldap user" do
     only_if "getent passwd #{node['ecflow']['daemon']['user']}"
 end
 
-directory node['ecflow']['daemon']['home'] do
-    owner node['ecflow']['daemon']['user']
-    group node['ecflow']['daemon']['user']
-    mode 0755
-end
-
 user node['ecflow']['daemon']['user'] do
     supports :manage_home => true
     comment 'ECFLOW daemon user'
@@ -134,6 +129,12 @@ user node['ecflow']['ecf_base_user'] do
     gid node['ecflow']['daemon']['user']
     shell '/bin/bash'
     not_if "getent passwd #{node['ecflow']['ecf_base_user']}" #LDAP user
+end
+
+directory node['ecflow']['daemon']['home'] do
+    owner node['ecflow']['daemon']['user']
+    group node['ecflow']['daemon']['user']
+    mode 0755
 end
 
 directory node['ecflow']['ecf_base'] do
@@ -166,9 +167,27 @@ template '/etc/init.d/ecflow-server' do
     notifies :start, 'service[ecflow-server]', :immediately
 end
 
+file '/usr/bin/ecflow_logsvr.pl' do
+  mode '0755'
+  owner 'root'
+  group 'root'
+end
+
+template '/etc/init.d/ecflow-logsvr' do
+    source 'ecflow-logsvr.erb'
+    owner 'root'
+    group 'root'
+    mode '0755'
+end
+
 service "ecflow-server" do
-    supports :status => false, :start => true, :stop => true, :restart => true
-    action :nothing
+    supports :restart => true, :start => true, :stop => true, :reload => true
+    action [ :enable, :start]
+end
+
+service "ecflow-logsvr" do
+    supports :restart => true, :start => true, :stop => true, :reload => true
+    action [ :enable, :start]
 end
 
 #Install a testsuite as a starting point
