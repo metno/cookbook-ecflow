@@ -32,6 +32,7 @@ package "ecflow-server" do
     provider Chef::Provider::Package::Gdebi
     source dest_server
     action :install
+    not_if "dpkg -l ecflow-server | grep #{node['ecflow']['server']['version']}"
 end
 
 # Replace shebang. /bin/sh on ubuntu is not bash
@@ -62,6 +63,7 @@ package "ecflow-client" do
     provider Chef::Provider::Package::Gdebi
     source dest_client
     action :install
+    not_if "dpkg -l ecflow | grep #{node['ecflow']['server']['version']}"
 end
 
 # Install the viewer
@@ -83,6 +85,7 @@ package "ecflow-view" do
     provider Chef::Provider::Package::Gdebi
     source dest_view
     action :install
+    not_if "dpkg -l ecflowview | grep #{node['ecflow']['server']['version']}"
 end
 
 
@@ -102,6 +105,7 @@ package "ecflow-python" do
     provider Chef::Provider::Package::Gdebi
     source dest_python
     action :install
+    not_if "dpkg -l ecflow-python | grep #{node['ecflow']['server']['version']}"
 end
 
 execute "create home dir for ecf_base_user if ldap user" do
