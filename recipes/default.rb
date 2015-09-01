@@ -105,7 +105,7 @@ package "ecflow-python" do
 end
 
 execute "create home dir for ecf_base_user if ldap user" do
-    command "mkdir -p #{node['ecflow']['ecf_base']}"
+    command "mkdir -p #{node['ecflow']['ecf_base_user_home']}"
     only_if "getent passwd #{node['ecflow']['ecf_base_user']}"
 end
 
@@ -125,7 +125,7 @@ end
 user node['ecflow']['ecf_base_user'] do
     supports :manage_home => true
     comment 'ECFLOW base user'
-    home node['ecflow']['ecf_base']
+    home node['ecflow']['ecf_base_user_home']
     gid node['ecflow']['daemon']['user']
     shell '/bin/bash'
     not_if "getent passwd #{node['ecflow']['ecf_base_user']}" #LDAP user

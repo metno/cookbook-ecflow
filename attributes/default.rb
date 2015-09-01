@@ -16,12 +16,15 @@ default['ecflow']['log_server']['port'] = 9316
 default['ecflow']['daemon']['home'] = '/home/ecflow'
 
 # Suite definitions and families must be placed here. 
-default['ecflow']['ecf_base'] = '/home/metop'
-default['ecflow']['ecf_home'] = "#{node['ecflow']['ecf_base']}/ecflow"
+default['ecflow']['ecf_base'] = '/home/metop/ecf_base'
+default['ecflow']['ecf_home'] = "/home/metop/ecf_home"
 
 # user with write access to the ecflow-tasks.
 default['ecflow']['ecf_base_user'] = 'metop'
+default['ecflow']['ecf_base_user_home'] = '/home/metop'
 default['ecflow']['ecf_base_group'] = 'metop'
+
+default['ecflow']['ecf_environment'] = 'development'
 
 # Installs a teststuite with a simple 'hello' task
 default['ecflow']['install_testsuite'] = true
