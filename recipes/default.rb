@@ -109,6 +109,12 @@ execute "create home dir for ecf_base_user if ldap user" do
     only_if "getent passwd #{node['ecflow']['ecf_base_user']}"
 end
 
+directory node['ecflow']['ecf_base_user_home'] do
+    owner node['ecflow']['ecf_base_user']
+    group node['ecflow']['ecf_base_user']
+    mode 0755
+end
+
 execute "create home dir for ecf daemon user if ldap user" do
     command "mkdir -p #{node['ecflow']['daemon']['home']}"
     only_if "getent passwd #{node['ecflow']['daemon']['user']}"
