@@ -24,7 +24,7 @@ default['ecflow']['ecf_base_user'] = 'metop'
 default['ecflow']['ecf_base_user_home'] = '/home/metop'
 default['ecflow']['ecf_base_group'] = 'metop'
 
-default['ecflow']['ecf_environment'] = 'development'
+default['ecflow']['ecf_environment'] = 'test'
 
 # Installs a teststuite with a simple 'hello' task
 default['ecflow']['install_testsuite'] = true
