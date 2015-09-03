@@ -5,7 +5,7 @@ export LOGPORT=9316
 export LOGPATH=$ECF_HOME
 export LC_ALL=en_US.UTF-8
 export ECF_INCLUDE=$ECF_BASE/lib/perl/includes
-export PERL5LIB=$PERL5LIB:$ECF_BASE/lib/perl:$ECF_BASE/lib/perlincludes
-export PATH=$PATH:<%=node['ecflow']['ecf_base']%>/binnode
+export PERL5LIB=$PERL5LIB:$ECF_BASE/lib/perl:$ECF_BASE/lib/perl/includes
+export PATH=$PATH:<%=node['ecflow']['ecf_base']%>/bin
 export ECF_ENVIRONMENT=<%=node['ecflow']['ecf_environment']%>
 export ECF_SERVER=<%=node['ecflow']['public_ip_address']%>
