@@ -79,3 +79,5 @@ default['ecflow']['downloads'] =   {
         }
     }
 }
+
+default['ecflow']['public_ip_address'] = node['openstack']['public_ipv4'] || node['ipaddress'] rescue nil

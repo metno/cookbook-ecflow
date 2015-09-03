@@ -10,6 +10,7 @@ include_recipe "gdebi"
 include_recipe "hostname::default"
 
 
+
 ENV['LANGUAGE'] = ENV['LANG'] = ENV['LC_ALL'] = "en_US.UTF-8"
 ENV['ECF_HOME'] = node['ecflow']['ecf_home']
 ENV['ECF_BASE'] = node['ecflow']['ecf_base']
