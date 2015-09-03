@@ -80,4 +80,12 @@ default['ecflow']['downloads'] =   {
     }
 }
 
-default['ecflow']['public_ip_address'] = node['openstack']['public_ipv4'] || node['ipaddress'] rescue nil
+default['ecflow']['floating_ip_address'] = nil;
+
+if node['ecflow']['floating_ip_address']
+    default['ecflow']['public_ip_address'] = node['ecflow']['floating_ip_address']
+elsif node['openstack'] &&  node['openstack']['public_ipv4']
+    default['ecflow']['public_ip_address'] = node['openstack']['public_ipv4']
+else 
+    default['ecflow']['public_ip_address'] = node['ipaddress'] 
+end
