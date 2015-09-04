@@ -190,6 +190,18 @@ file '/usr/bin/ecflow_logsvr.pl' do
   group 'root'
 end
 
+file '/usr/bin/ecflow_start.sh' do
+  mode '0755'
+  owner 'root'
+  group 'root'
+end
+
+file '/usr/bin/ecflow_stop.sh' do
+  mode '0755'
+  owner 'root'
+  group 'root'
+end
+
 template '/etc/init.d/ecflow-logsvr' do
     source 'ecflow-logsvr.erb'
     owner 'root'
