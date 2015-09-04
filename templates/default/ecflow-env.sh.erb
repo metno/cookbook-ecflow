@@ -9,3 +9,5 @@ export PERL5LIB=$PERL5LIB:$ECF_BASE/lib/perl:$ECF_BASE/lib/perl/includes
 export PATH=$PATH:<%=node['ecflow']['ecf_base']%>/bin
 export ECF_ENVIRONMENT=<%=node['ecflow']['ecf_environment']%>
 export ECF_SERVER=<%=node['ecflow']['public_ip_address']%>
+export ECF_BASE_USER=<%=node['ecflow']['ecf_base_user']%>
+export ECF_DAEMON_USER=<%=node['ecflow']['daemon']['user']%>
