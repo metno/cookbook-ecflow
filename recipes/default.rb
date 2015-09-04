@@ -161,6 +161,12 @@ directory "#{node['ecflow']['ecf_home']}" do
     action :create
 end
 
+# Bug in chef setting mode 2775 in the directory directive 
+# above gives weird permissions
+execute 'chmod' do
+  command "chmod g+s #{node['ecflow']['ecf_home']}"
+end
+
 # Setup env
 template '/etc/profile.d/ecflow-env.sh' do
     source 'ecflow-env.sh.erb'
