@@ -10,8 +10,6 @@ default['ecflow']['daemon']['port'] = 3141
 # ecflow is launched as this user
 default['ecflow']['daemon']['user'] = 'ecflow'
 
-default['ecflow']['log_server']['port'] = 9316
-
 # Logfiles and check point files will be written here. 
 default['ecflow']['daemon']['home'] = '/home/ecflow'
 
@@ -28,6 +26,20 @@ default['ecflow']['ecf_environment'] = 'test'
 
 # Installs a teststuite with a simple 'hello' task
 default['ecflow']['install_testsuite'] = true
+
+default['ecflow']['floating_ip_address'] = nil;
+
+if node['ecflow']['floating_ip_address']
+    default['ecflow']['public_ip_address'] = node['ecflow']['floating_ip_address']
+elsif node['openstack'] &&  node['openstack']['public_ipv4']
+    default['ecflow']['public_ip_address'] = node['openstack']['public_ipv4']
+else 
+    default['ecflow']['public_ip_address'] = node['ipaddress'] 
+end
+
+
+default['ecflow']['log_server']['port'] = 9316
+default['ecflow']['log_server']['host'] = node['ecflow']['public_ip_address']
 
 default['ecflow']['downloads'] =   {
     'ubuntu' => {
@@ -79,13 +91,3 @@ default['ecflow']['downloads'] =   {
         }
     }
 }
-
-default['ecflow']['floating_ip_address'] = nil;
-
-if node['ecflow']['floating_ip_address']
-    default['ecflow']['public_ip_address'] = node['ecflow']['floating_ip_address']
-elsif node['openstack'] &&  node['openstack']['public_ipv4']
-    default['ecflow']['public_ip_address'] = node['openstack']['public_ipv4']
-else 
-    default['ecflow']['public_ip_address'] = node['ipaddress'] 
-end
