@@ -148,13 +148,15 @@ directory node['ecflow']['daemon']['home'] do
     mode 0755
 end
 
+
 directory node['ecflow']['ecf_base'] do
     owner node['ecflow']['ecf_base_user']
     group node['ecflow']['ecf_base_user']
     mode 0755
 end
 
-unless Dir.exist?(node['ecflow']['ecf_home'])
+# Workaround:  DIR.exist? returns false if ecf_home is a mountpoint!
+unless  %x(-d node['ecflow']['ecf_home'] )
     directory "#{node['ecflow']['ecf_home']}" do
         owner node['ecflow']['ecf_base_user']
         group node['ecflow']['daemon']['user']
@@ -165,8 +167,11 @@ end
 
 # Bug in chef setting mode 2775 in the directory directive 
 # above gives weird permissions
-execute 'chmod' do
-    command "chmod g+s #{node['ecflow']['ecf_home']}"
+# 2: Gives permission denied if mounted
+unless %x( mountpoint -q node['ecflow']['ecf_home'])
+    execute 'chmod' do
+        command "chmod g+s #{node['ecflow']['ecf_home']}"
+  end
 end
 
 # Setup env

@@ -15,4 +15,9 @@ suites:
     run_list:
         - recipe[apt]
         - recipe[ecflow::default]
-    attributes:
+    attributes: {
+        "ecflow": {
+            "install_testsuite": false
+        }
+    }
+        
