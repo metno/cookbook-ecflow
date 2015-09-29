@@ -159,12 +159,13 @@ directory "#{node['ecflow']['ecf_home']}" do
     group node['ecflow']['daemon']['user']
     mode 0775
     action :create
+    not_if { File.exist?(node['ecflow']['ecf_home']) }
 end
 
 # Bug in chef setting mode 2775 in the directory directive 
 # above gives weird permissions
 execute 'chmod' do
-  command "chmod g+s #{node['ecflow']['ecf_home']}"
+    command "chmod g+s #{node['ecflow']['ecf_home']}"
 end
 
 # Setup env
