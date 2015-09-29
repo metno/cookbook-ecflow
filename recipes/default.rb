@@ -159,7 +159,7 @@ directory "#{node['ecflow']['ecf_home']}" do
     group node['ecflow']['daemon']['user']
     mode 0775
     action :create
-    not_if { File.exist?(node['ecflow']['ecf_home']) }
+    not_if { Dir.exist?(node['ecflow']['ecf_home']) }
 end
 
 # Bug in chef setting mode 2775 in the directory directive 
