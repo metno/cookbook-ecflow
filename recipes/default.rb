@@ -156,13 +156,12 @@ directory node['ecflow']['ecf_base'] do
 end
 
 # Workaround:  DIR.exist? returns false if ecf_home is a mountpoint!
-unless  %x(-d node['ecflow']['ecf_home'] )
-    directory "#{node['ecflow']['ecf_home']}" do
-        owner node['ecflow']['ecf_base_user']
-        group node['ecflow']['daemon']['user']
-        mode 0775
-        action :create
-    end
+directory "#{node['ecflow']['ecf_home']}" do
+    owner node['ecflow']['ecf_base_user']
+    group node['ecflow']['daemon']['user']
+    mode 0775
+    action :create
+    not_if "mountpoint -q #{node['ecflow']['ecf_home']}"
 end
 
 # Bug in chef setting mode 2775 in the directory directive 
@@ -171,7 +170,7 @@ end
 unless %x( mountpoint -q node['ecflow']['ecf_home'])
     execute 'chmod' do
         command "chmod g+s #{node['ecflow']['ecf_home']}"
-  end
+    end
 end
 
 # Setup env
