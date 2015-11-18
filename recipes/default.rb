@@ -151,7 +151,7 @@ end
 
 directory node['ecflow']['ecf_base'] do
     owner node['ecflow']['ecf_base_user']
-    group node['ecflow']['ecf_base_user']
+    group node['ecflow']['daemon']['user']
     mode 0755
 end
 
