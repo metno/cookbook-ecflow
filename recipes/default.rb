@@ -156,7 +156,8 @@ directory node['ecflow']['ecf_base'] do
 end
 
 # Workaround:  DIR.exist? returns false if ecf_home is a mountpoint!
-unless %x( mountpoint -q node['ecflow']['ecf_home'])
+%x( mountpoint -q node['ecflow']['ecf_home'])
+unless ($? == 0) # If not is mountpoint
     directory "#{node['ecflow']['ecf_home']}" do
         owner node['ecflow']['ecf_base_user']
         group node['ecflow']['daemon']['user']
@@ -168,7 +169,8 @@ end
 # Bug in chef setting mode 2775 in the directory directive 
 # above gives weird permissions
 # 2: Gives permission denied if mounted
-unless %x( mountpoint -q node['ecflow']['ecf_home'])
+%x( mountpoint -q node['ecflow']['ecf_home'])
+unless ( $? == 0 ) # If not is mountpoint
     execute 'chmod' do
         command "chmod g+s #{node['ecflow']['ecf_home']}"
     end
