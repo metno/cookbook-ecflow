@@ -148,11 +148,10 @@ directory node['ecflow']['daemon']['home'] do
     mode 0755
 end
 
-
 directory node['ecflow']['ecf_base'] do
-    owner node['ecflow']['ecf_base_user']
-    group node['ecflow']['daemon']['user']
-    mode 0755
+    group node['ecflow']['ecf_base_user']
+    owner node['ecflow']['daemon']['user']
+    mode 0775
 end
 
 # Workaround:  DIR.exist? returns false if ecf_home is a mountpoint!
