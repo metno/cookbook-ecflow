@@ -3,7 +3,7 @@
 USER=<%= node['ecflow']['daemon']['user'] %>
 case "$1" in
     start)
-            su - $USER -c "/usr/bin/ecflow_start.sh -p<%= node['ecflow']['daemon']['port'] %>"
+            su - $USER -c "/usr/bin/ecflow_start.sh -p<%= node['ecflow']['daemon']['port']%> -d <%= node['ecflow']['ecf_home'] %>"
    ;;
     stop)
             su - $USER -c "/usr/bin/ecflow_stop.sh -p<%= node['ecflow']['daemon']['port'] %>"
