@@ -4,7 +4,7 @@ maintainer_email 'it-geo-tf@met.no'
 license          'GPL v2'
 description      'Installs/Configures ecflow'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-version          '0.4.0'
+version          '0.4.1'
 
 %w{ ubuntu }.each do |os|
   supports os
