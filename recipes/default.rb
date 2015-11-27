@@ -159,16 +159,14 @@ directory node['ecflow']['ecf_base'] do
 end
 
 
-# Workaround:  DIR.exist? returns false if ecf_workspace is a mountpoint!
-%x( mountpoint -q node['ecflow']['ecf_workspace'])
-unless ($? == 0) # If not is mountpoint
-    directory "#{node['ecflow']['ecf_workspace']}" do
-        owner node['ecflow']['ecf_base_user']
-        group node['ecflow']['daemon']['user']
-        mode 0775
-        action :create
-    end
+directory "#{node['ecflow']['ecf_workspace']}" do
+    owner node['ecflow']['ecf_base_user']
+    group node['ecflow']['daemon']['user']
+    mode 0775
+    action :create
+    ignore_failure true
 end
+
 
 # Bug in chef setting mode 2775 in the directory directive 
 # above gives weird permissions
