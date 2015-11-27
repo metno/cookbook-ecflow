@@ -15,7 +15,16 @@ default['ecflow']['daemon']['home'] = '/home/ecflow'
 
 # Suite definitions and families must be placed here. 
 default['ecflow']['ecf_base'] = '/home/metop/ecf_base'
-default['ecflow']['ecf_home'] = "/home/metop/ecf_home"
+default['ecflow']['ecf_workspace'] = "/home/metop/ecf_workspace"
+
+
+
+# Use ecf_workspace, not ecf_home, ecflow server will overwrite this env var anyway.
+# ecflow-server Writes server-log here what so ever:
+default['ecflow']['ecf_home'] = "#{node['ecflow']['daemon']['home']}/ecflow_server"
+
+# Here goes the ecf - expanded runnable scripts and output
+default['ecflow']['ecf_workspace'] = "/home/metop/ecf_workspace"
 
 # user with write access to the ecflow-tasks.
 default['ecflow']['ecf_base_user'] = 'metop'

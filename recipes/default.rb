@@ -12,9 +12,13 @@ include_recipe "hostname::default"
 
 
 ENV['LANGUAGE'] = ENV['LANG'] = ENV['LC_ALL'] = "en_US.UTF-8"
-ENV['ECF_HOME'] = node['ecflow']['ecf_home']
+ENV['ECF_WORKSPACE'] = node['ecflow']['ecf_workspace']
 ENV['ECF_BASE'] = node['ecflow']['ecf_base']
 ENV['LOGPORT'] = node['ecflow']['log_server']['port'].to_s
+
+# Dont need this:
+ENV['ECF_HOME'] = node['ecflow']['ecf_home']
+
 
 # Install the server
 arch = node['ecflow']['arch']
@@ -154,10 +158,10 @@ directory node['ecflow']['ecf_base'] do
     mode 0775
 end
 
-# Workaround:  DIR.exist? returns false if ecf_home is a mountpoint!
-%x( mountpoint -q node['ecflow']['ecf_home'])
+# Workaround:  DIR.exist? returns false if ecf_workspace is a mountpoint!
+%x( mountpoint -q node['ecflow']['ecf_workspace'])
 unless ($? == 0) # If not is mountpoint
-    directory "#{node['ecflow']['ecf_home']}" do
+    directory "#{node['ecflow']['ecf_workspace']}" do
         owner node['ecflow']['ecf_base_user']
         group node['ecflow']['daemon']['user']
         mode 0775
@@ -168,10 +172,10 @@ end
 # Bug in chef setting mode 2775 in the directory directive 
 # above gives weird permissions
 # 2: Gives permission denied if mounted
-%x( mountpoint -q node['ecflow']['ecf_home'])
+%x( mountpoint -q node['ecflow']['ecf_workspace'])
 unless ( $? == 0 ) # If not is mountpoint
     execute 'chmod' do
-        command "chmod g+s #{node['ecflow']['ecf_home']}"
+        command "chmod g+s #{node['ecflow']['ecf_workspace']}"
     end
 end
 
