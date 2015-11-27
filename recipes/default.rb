@@ -158,12 +158,6 @@ directory node['ecflow']['ecf_base'] do
     mode 0775
 end
 
-directory "#{node['ecflow']['ecf_home']}" do
-    owner node['ecflow']['daemon']['user']
-    group node['ecflow']['daemon']['user']
-    mode 0755
-    action :create
-end
 
 # Workaround:  DIR.exist? returns false if ecf_workspace is a mountpoint!
 %x( mountpoint -q node['ecflow']['ecf_workspace'])
