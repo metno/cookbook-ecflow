@@ -15,6 +15,7 @@ default['ecflow']['daemon']['home'] = '/home/ecflow'
 
 # Here goes the ecf - expanded runnable scripts and output, scripts linked from ecf_base
 default['ecflow']['ecf_workspace'] = "#{node['ecflow']['daemon']['home']}/ecf_workspace"
+default['ecflow']['ecf_home'] = "#{node['ecflow']['daemon']['home']}/ecflow_server"
 
 # user which owns the task repository. (git ).
 default['ecflow']['ecf_base_user'] = 'metop'
