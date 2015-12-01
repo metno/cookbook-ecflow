@@ -8,7 +8,6 @@
     [ $status -eq 0 ]
 }
 
-
 @test "ENV ECF_HOME EXISTS" {
     out=$(echo $ECF_HOME)
     [$out -ne ""]
@@ -32,4 +31,9 @@
 @test "ENV ECF_ENVIRONMENT exists" {
     out=$(echo $ECF_ENVIRONMENT)    
     [$out -ne ""]
+}
+
+@test "backup script installed" {
+    run test -f /usr/local/bin/backup_log_and_checkpoint.sh
+    [ $status -eq 0 ]
 }

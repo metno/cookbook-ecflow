@@ -44,6 +44,10 @@ end
 default['ecflow']['log_server']['port'] = 9316
 default['ecflow']['log_server']['host'] = node['ecflow']['public_ip_address']
 
+default['ecflow']['env_settings'] = '/etc/profile.d/ecflow-env.sh'
+
+default['ecflow']['backup_dir'] = "#{node['ecflow']['ecf_home']}/log"
+
 default['ecflow']['downloads'] =   {
     'ubuntu' => {
         'amd64' => 

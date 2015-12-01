@@ -1,0 +1,11 @@
+description "ECFLOW logserver daemon"
+
+start on runlevel [2345]
+stop on runlevel [!2345]
+
+setgid  <%= node['ecflow']['daemon']['user'] %>
+setuid  <%= node['ecflow']['daemon']['user'] %>
+
+respawn
+
+exec bash -l -c "/usr/bin/ecflow_logsvr.pl --options args"

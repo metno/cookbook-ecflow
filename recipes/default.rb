@@ -40,18 +40,6 @@ package "ecflow-server" do
     not_if "dpkg -l ecflow-server | grep #{node['ecflow']['server']['version']}"
 end
 
-# Replace shebang. /bin/sh on ubuntu is not bash
-# So scripts give syntax errors
-execute "replace shebang" do
-    command "sed  -i 's$^#!/bin/sh$$#!/bin/bash$' /usr/bin/ecflow_start.sh"
-    not_if "grep '#!/bin/bash' /usr/bin/ecflow_start.sh"
-end
-
-execute "replace shebang" do
-    command "sed  -i 's$^#!/bin/sh$$#!/bin/bash$' /usr/bin/ecflow_stop.sh"
-    not_if "grep '#!/bin/bash' /usr/bin/ecflow_stop.sh"
-end
-
 # Install the client
 client_url = node['ecflow']['downloads'][node['platform']][arch][node['platform_version']]['ecflow-client'][node['ecflow']['client']['version']]['url']
 client_sha256 = node['ecflow']['downloads'][node['platform']][arch][node['platform_version']]['ecflow-client'][node['ecflow']['client']['version']]['sha256']
@@ -167,6 +155,12 @@ directory "#{node['ecflow']['ecf_workspace']}" do
     ignore_failure true
 end
 
+directory node['ecflow']['ecf_home'] do
+    owner node['ecflow']['daemon']['user']
+    group node['ecflow']['daemon']['user']
+    mode 0775
+    action :create
+end
 
 # Bug in chef setting mode 2775 in the directory directive 
 # above gives weird permissions
@@ -179,20 +173,26 @@ unless ( $? == 0 ) # If not is mountpoint
 end
 
 # Setup env
-template '/etc/profile.d/ecflow-env.sh' do
+template node['ecflow']['env_settings'] do
     source 'ecflow-env.sh.erb'
     mode 0755
     owner 'root'
     group 'root'
 end
 
-# Install init script
-template '/etc/init.d/ecflow-server' do
-    source 'init.sh.erb'
+# Create backup script for ecflow logs and checkpoint
+template "/usr/local/bin/backup_log_and_checkpoint.sh" do
+    source 'backup_log_and_checkpoint.sh.erb'
     mode 0755
     owner 'root'
     group 'root'
-    notifies :start, 'service[ecflow-server]', :immediately
+end
+
+# Keep ecflow_server running with Upstart
+template '/etc/init/ecflow-server.conf' do
+    source 'ecflow-server-upstart.erb'
+    mode 0644
+    notifies :restart, 'service[ecflow-server]'
 end
 
 file '/usr/bin/ecflow_logsvr.pl' do
@@ -213,11 +213,11 @@ file '/usr/bin/ecflow_stop.sh' do
   group 'root'
 end
 
-template '/etc/init.d/ecflow-logsvr' do
-    source 'ecflow-logsvr.erb'
-    owner 'root'
-    group 'root'
-    mode '0755'
+# Keep ecflow logserver running with Upstart
+template '/etc/init/ecflow-logserver.conf' do
+    source 'ecflow-logserver-upstart.erb'
+    mode 0644
+    notifies :restart, 'service[ecflow-logserver]'
 end
 
 service "ecflow-server" do
@@ -225,7 +225,7 @@ service "ecflow-server" do
     action [ :enable, :start]
 end
 
-service "ecflow-logsvr" do
+service "ecflow-logserver" do
     supports :restart => true, :start => true, :stop => true, :reload => true
     action [ :enable, :start]
 end

@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# Backup checkpoint files and ecflow log file for Ecflow server.
+# A fresh ecflow server will not have these files, so we check for their
+# presence before complaining.
+
+. <%= node['ecflow']['env_settings'] %>
+
+BACKUP_DIR=<%= node['ecflow']['backup_dir'] %>
+HOST=$(hostname)
+
+if [ ! -d $BACKUP_DIR ]; then
+  mkdir $BACKUP_DIR
+fi
+
+cd $ECF_HOME
+
+for file in $HOST.$ECF_PORT.ecf.check $HOST.$ECF_PORT.ecf.check.b $HOST.$ECF_PORT.ecf.log; do
+
+    if [ -f $file ] ; then
+        cp  $file $BACKUP_DIR/
+
+        if [ "$?" !=  "0" ]; then
+            logger -t ECFLOW_BACKUP "Failed to backup file $file for ecflow server."
+        fi
+    fi
+done

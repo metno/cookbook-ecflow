@@ -1,0 +1,22 @@
+description "ECFLOW server daemon"
+
+start on runlevel [2345]
+stop on runlevel [!2345]
+
+setgid  <%= node['ecflow']['daemon']['user'] %>
+setuid  <%= node['ecflow']['daemon']['user'] %>
+
+kill signal SIGINT
+
+respawn
+
+pre-start script
+    bash -l -c /usr/local/bin/backup_log_and_checkpoint.sh
+end script
+
+exec bash -l -c /usr/bin/ecflow_server
+
+pre-stop script
+    ecflow_client  --host $( hostname ) --halt=yes
+    ecflow_client  --host $( hostname ) --check_pt
+end script
