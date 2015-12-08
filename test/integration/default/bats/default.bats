@@ -8,28 +8,32 @@
     [ $status -eq 0 ]
 }
 
+@test "ENV ECF_SERVER DIR exists" {
+    run grep "ECF_SERVER_DIR=[^\n]\+" /etc/profile.d/ecflow-env.sh
+    [ $status -eq 0 ]
+}
 
-@test "ENV ECF_HOME EXISTS" {
-    out=$(echo $ECF_HOME)
-    [$out -ne ""]
+@test "ENV ECF_HOME exists" {
+    run grep "ECF_HOME=[^\n]\+" /etc/profile.d/ecflow-env.sh
+    [ $status -eq 0 ]
 }
 
 @test "ENV ECF_WORKSPACE exists" {
-    out=$(echo $ECF_WORKSPACE)
-    [$out -ne ""]
+    run grep "ECF_WORKSPACE=[^\n]\+" /etc/profile.d/ecflow-env.sh
+    [ $status -eq 0 ]
 }
 
 @test "ENV ECF_BASE exists" {
-    out=$(echo $ECF_BASE)
-    [$out -ne ""]
+    run grep "ECF_BASE=[^\n]\+" /etc/profile.d/ecflow-env.sh
+    [ $status -eq 0 ]
 }
 
 @test "ENV ECF_DAEMON_USER exists" {
-    out=$(echo $ECF_DAEMON_USER)    
-    [$out -ne ""]
+    run grep "ECF_DAEMON_USER=[^\n]\+" /etc/profile.d/ecflow-env.sh
+    [ $status -eq 0 ]
 }
 
 @test "ENV ECF_ENVIRONMENT exists" {
-    out=$(echo $ECF_ENVIRONMENT)    
-    [$out -ne ""]
+    run grep "ECF_ENVIRONMENT=[^\n]\+" /etc/profile.d/ecflow-env.sh
+    [ $status -eq 0 ]
 }
