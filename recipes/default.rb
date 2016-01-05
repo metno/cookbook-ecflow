@@ -19,7 +19,6 @@ ENV['LOGPORT'] = node['ecflow']['log_server']['port'].to_s
 # Dont need this:
 ENV['ECF_HOME'] = node['ecflow']['ecf_home']
 
-
 # Install the server
 arch = node['ecflow']['arch']
 server_url = node['ecflow']['downloads'][node['platform']][arch][node['platform_version']]['ecflow-server'][node['ecflow']['server']['version']]['url']
@@ -93,7 +92,6 @@ package "ecflow-view" do
     not_if "dpkg -l ecflowview | grep #{node['ecflow']['server']['version']}"
 end
 
-
 # Install the python library
 python_url = node['ecflow']['downloads'][node['platform']][arch][node['platform_version']]['ecflow-python'][node['ecflow']['python']['version']]['url']
 python_sha256 = node['ecflow']['downloads'][node['platform']][arch][node['platform_version']]['ecflow-python'][node['ecflow']['python']['version']]['sha256']
@@ -152,12 +150,17 @@ directory node['ecflow']['daemon']['home'] do
     mode 0755
 end
 
+directory node['ecflow']['ecf_server_dir'] do
+    owner node['ecflow']['daemon']['user']
+    group node['ecflow']['daemon']['user']
+    mode 0755
+end
+
 directory node['ecflow']['ecf_base'] do
     group node['ecflow']['ecf_base_user']
     owner node['ecflow']['daemon']['user']
     mode 0775
 end
-
 
 directory "#{node['ecflow']['ecf_workspace']}" do
     owner node['ecflow']['ecf_base_user']
@@ -166,7 +169,6 @@ directory "#{node['ecflow']['ecf_workspace']}" do
     action :create
     ignore_failure true
 end
-
 
 # Bug in chef setting mode 2775 in the directory directive 
 # above gives weird permissions
