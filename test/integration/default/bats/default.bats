@@ -47,3 +47,13 @@
     run nc -w2 -z localhost 9316
     [ $status -eq 0 ]
 }
+
+@test "copy checkpoint file in crontab" {
+    run  bash -c 'crontab -u ecflow -l  | grep "# Chef Name: copy checkpoint file"'
+    [ $status -eq 0 ]
+}
+
+@test "copy previous checkpoint file in crontab" {
+    run  bash -c 'crontab -u ecflow -l  | grep "# Chef Name: copy previous checkpoint file"'
+    [ $status -eq 0 ]
+}

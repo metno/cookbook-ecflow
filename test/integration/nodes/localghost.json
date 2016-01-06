@@ -1,0 +1,43 @@
+{
+  "id": "localghost",
+  "name": "localghost.met.no",
+  "chef_environment": "kitchentest",
+  "fqdn": "localghost.met.no",
+  "ipaddress": "127.0.0.1",
+  "default": {
+    "hostname": "localghost"
+   },
+
+  "normal": {
+    "ecflow": {
+        "public_ip_address": "10.10.10.10",
+        "ecf_workspace": "/home/ecflow/ecf_workspace",
+        "ecf_home": "/home/ecflow/ecflow_server",
+        "ecf_server_dir": "/home/ecflow/ecflow_server",
+        "ecf_base_user": "metop",
+        "ecf_base_user_home": "/home/metop",
+        "ecf_base_group": "metop",
+        "ecf_base": "/home/metop/ecf_base",
+        "ecf_environment": "test",
+        "floating_ip_address": null
+    },
+    "tags": [
+
+    ]
+  },
+  "recipes": [
+      "apt",
+      "apt::default",
+      "ecflow::default",
+      "gdebi::default",
+      "hostname::default"
+    ],
+
+  "run_list": [
+  "recipe[met-server::default]",
+  "recipe[met-server::it-geo-tf]",
+  "recipe[ecflow::default]",
+  "recipe[met-ecflow::default]"
+]
+
+}

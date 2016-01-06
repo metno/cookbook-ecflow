@@ -9,6 +9,9 @@
 include_recipe "gdebi"
 include_recipe "hostname::default"
 
+if Chef::Config[:solo]
+    raise 'This recipe requires Chef Search. Chef Solo does not support search.'
+end
 
 
 ENV['LANGUAGE'] = ENV['LANG'] = ENV['LC_ALL'] = "en_US.UTF-8"
@@ -162,7 +165,7 @@ directory node['ecflow']['ecf_base'] do
     mode 0775
 end
 
-directory "#{node['ecflow']['ecf_workspace']}" do
+directory node['ecflow']['ecf_workspace'] do
     owner node['ecflow']['ecf_base_user']
     group node['ecflow']['daemon']['user']
     mode 0775
@@ -189,6 +192,7 @@ template '/etc/profile.d/ecflow-env.sh' do
 end
 
 # Install init script
+
 template '/etc/init.d/ecflow-server' do
     source 'init.sh.erb'
     mode 0755
@@ -197,22 +201,12 @@ template '/etc/init.d/ecflow-server' do
     notifies :start, 'service[ecflow-server]', :immediately
 end
 
-file '/usr/bin/ecflow_logsvr.pl' do
-  mode '0755'
-  owner 'root'
-  group 'root'
-end
-
-file '/usr/bin/ecflow_start.sh' do
-  mode '0755'
-  owner 'root'
-  group 'root'
-end
-
-file '/usr/bin/ecflow_stop.sh' do
-  mode '0755'
-  owner 'root'
-  group 'root'
+%w{/usr/bin/ecflow_logsvr.pl /usr/bin/ecflow_start.sh /usr/bin/ecflow_stop.sh }.each do |filename|
+    file filename do
+        mode '0755'
+        owner 'root'
+        group 'root'
+    end
 end
 
 template '/etc/init.d/ecflow-logsvr' do
@@ -232,5 +226,30 @@ service "ecflow-logsvr" do
     action [ :enable, :start]
 end
 
-#Install a testsuite as a starting point
+printf("YO! ENVIRNON: %s \n", node.environment)
+
+# Crontab which copies ecflow checkpoint files from other nodes in environment
+# And have it ready if needed.
+servers = search(:node, "chef_environment:#{node.chef_environment} AND recipes:ecflow\\:\\:default")
+servers.each do |server|
+    if server['ecflow']['public_ip_address'] == node['ecflow']['public_ip_address'] then # Skip "myself"
+      next
+    end
+    cron "copy checkpoint file from #{server['hostname']}" do
+        mailto node['ecflow']['daemon']['user']
+        user node['ecflow']['daemon']['user']
+        command "scp #{server['ecflow']['public_ip_address']}:#{server['ecflow']['ecf_home']}/#{server['hostname']}.#{node['ecflow']['daemon']['port']}.check  #{node['ecflow']['ecf_home']}/. > /dev/null"
+        minute '5'
+    end
+    # In case the newest is corrupt, also copy previous chekpoint file
+    cron "copy previous checkpoint file from #{server['hostname']}" do
+        mailto node['ecflow']['daemon']['user']
+        user node['ecflow']['daemon']['user']
+        command "scp #{server['ecflow']['public_ip_address']}:#{server['ecflow']['ecf_home']}/#{server['hostname']}.#{node['ecflow']['daemon']['port']}.check.b  #{node['ecflow']['ecf_home']}/. > /dev/null"
+        minute '5'
+    end
+end
+
+
+# Install a testsuite as a starting point
 include_recipe 'ecflow::install_testsuite' if node['ecflow']['install_testsuite']
