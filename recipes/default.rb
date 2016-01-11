@@ -234,8 +234,7 @@ servers.each do |server|
     if server['ecflow']['public_ip_address'] == node['ecflow']['public_ip_address'] then # Skip "myself"
       next
     end
-    if node['ecflow']['ecf_environment'] != 'production'
-    then
+    if node['ecflow']['ecf_environment'] != 'production' then
         next
     end
     cron "copy checkpoint file from #{server['hostname']}" do
