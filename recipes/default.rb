@@ -226,7 +226,6 @@ service "ecflow-logsvr" do
     action [ :enable, :start]
 end
 
-printf("YO! ENVIRNON: %s \n", node.environment)
 
 # Crontab which copies ecflow checkpoint files from other nodes in environment
 # And have it ready if needed.
@@ -234,6 +233,10 @@ servers = search(:node, "chef_environment:#{node.chef_environment} AND recipes:e
 servers.each do |server|
     if server['ecflow']['public_ip_address'] == node['ecflow']['public_ip_address'] then # Skip "myself"
       next
+    end
+    if node['ecflow']['ecf_environment'] != 'production'
+    then
+        next
     end
     cron "copy checkpoint file from #{server['hostname']}" do
         mailto node['ecflow']['daemon']['user']
