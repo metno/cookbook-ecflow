@@ -32,6 +32,9 @@ default['ecflow']['ecf_base'] = "#{node['ecflow']['ecf_base_user_home']}/ecf_bas
 
 default['ecflow']['ecf_environment'] = 'test'
 
+# role could feks be 'master' or 'standby'
+default['ecflow']['ecf_role'] = 'master'
+
 # Installs a teststuite with a simple 'hello' task
 default['ecflow']['install_testsuite'] = true
 
