@@ -163,6 +163,7 @@ directory node['ecflow']['ecf_base'] do
     group node['ecflow']['ecf_base_user']
     owner node['ecflow']['daemon']['user']
     mode 0775
+    ignore_failure true
 end
 
 directory node['ecflow']['ecf_workspace'] do
